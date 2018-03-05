@@ -5,6 +5,9 @@ import re
 org = {}
 guest_dict = {}
 event_dict = {}
+drink = []
+dish = []
+entertaiment=[]
 f1 = open( "organisators.txt", 'r' )
 f3 = open( "guests.txt", 'r' )
 for i in f1.readlines():
@@ -139,45 +142,31 @@ def set_event():
 
 
 def set_dishes():
-    chicken = Dishes
-    chicken.name = "Фаршированный цыпленок"
-    chicken.weight = 200
-    chicken.consistency = {"Белки": 50,
-                           "Жиры": 35,
-                           "Углеводы": 70,
-                           "Каллорийность": 480}
-    chicken.price = 250
-
-    pork = Dishes
-    pork.name = "Свиная отбивная"
-    pork.weight = 200
-    pork.consistency = {"Белки": 30,
-                        "Жиры": 75,
-                        "Углеводы": 60,
-                        "Каллорийность": 430}
-    pork.price = 350
+    dish.append( Dishes( 'Фаршированный цыпленок', 200, {'Белки': 50, 'Жиры': 35, 'Углеводы': 70, 'Каллорийность': 480}, 250 ) )
+    dish.append( Dishes( 'Свиная отбивная', 200, {'Белки': 30, 'Жиры': 75, 'Углеводы': 60, 'Каллорийность': 430}, 350 ) )
+    dish.append( Dishes( 'Запеченая рыба в сливках', 250, {'Белки': 40, 'Жиры': 65, 'Углеводы': 70, 'Каллорийность': 370}, 420 ) )
+    dish.append( Dishes( 'Шарлотка', 150, {'Белки': 30, 'Жиры': 70, 'Углеводы': 90, 'Каллорийность': 350}, 230 ) )
+    dish.append( Dishes( 'Семифредо', 150, {'Белки': 20, 'Жиры': 60, 'Углеводы': 80, 'Каллорийность': 330}, 280 ) )
+    return dish
 
 
 def set_drinks():
-    juice = Drinks
-    juice.name = "Сок"
-    juice.volume = 200
-    juice.alcohol = Drinks.alcohol[2]
-    juice.price = 100
-
-    whiskey = Drinks
-    whiskey.name = "Виски"
-    whiskey.volume = 50
-    whiskey.alcohol = Drinks.alcohol[1]
-    whiskey.price = 150
+    drink.append( Drinks( 'Сок', 200, Drinks.alcohol[2], 100 ) )
+    drink.append( Drinks( 'Молочный коктейль', 250, Drinks.alcohol[2], 150 ) )
+    drink.append( Drinks( 'Газированные напитки', 200, Drinks.alcohol[2], 130 ) )
+    drink.append( Drinks( 'Виски', 50, Drinks.alcohol[1], 150 ) )
+    drink.append( Drinks( 'Вино', 150, Drinks.alcohol[1], 180 ) )
+    drink.append( Drinks( 'Водка', 50, Drinks.alcohol[1], 150 ) )
+    return drink
 
 
 def set_entertaiment():
-    caraoke = Entertaiment
-    caraoke.name = "Караоке"
-    caraoke.capacity = 4
-    caraoke.inventory = Entertaiment.inventory[3]
-    caraoke.duration = 300
+    entertaiment.append( Entertaiment( 'Караоке', 4, Entertaiment.inventory[3], 300, Entertaiment.activity[1] ) )
+    entertaiment.append( Entertaiment( 'Дискотека', 15, Entertaiment.inventory[2], 400, Entertaiment.activity[2] ) )
+    entertaiment.append( Entertaiment( 'Подвижные конкурсы', 6, Entertaiment.inventory[2], 200, Entertaiment.activity[3] ) )
+    entertaiment.append( Entertaiment( 'Творческие конкурсы', 8, Entertaiment.inventory[2], 200, Entertaiment.activity[1] ) )
+    return entertaiment
+
 
 
 def get_organisator_ratio():

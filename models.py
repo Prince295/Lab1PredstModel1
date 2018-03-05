@@ -118,7 +118,12 @@ class Place():
     design_label = "Дизайн интерьера"
     price=0
     price_label = "цена"
-
+    def __init__(self, capacity, price, design, square, address):
+        self.capacity = capacity
+        self.price = price
+        self.design = design
+        self.square = square
+        self.address = address
     def __str__(self):
         return "Место проведения"
 
@@ -131,13 +136,11 @@ class Dishes():
     weight_label = "Вес"
     price=0
     price_label = "цена"
-
     def __init__(self, name, consistency, weight, price):
         self.name = name
         self.price = price
         self.consistency = consistency
         self.weight = weight
-
     def __str__(self):
         return "Блюда"
 
@@ -189,5 +192,12 @@ class Entertaiment():
     def __str__(self):
         return "Конкурсы и развлечения"
 
-
+class Count():
+    drinks={}
+    dishes={}
+    entertaiments={}
+    def __init__(self, drink, dish, entertaiment):
+        self.drink = drink
+        self.dish = dish
+        self.entertaiment = entertaiment
 
