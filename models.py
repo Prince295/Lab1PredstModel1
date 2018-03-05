@@ -175,12 +175,16 @@ class Entertaiment():
                2 : "Небольшое количество",
                3 : "Большое количество"}
     inventory_label = "Инвентарь"
+    activity = {1 : "Маленькая физическая активность",
+                2 : "Средняя физическая активность",
+                3 : "Высокая физическая активность"}
 
-    def __init__(self, name, capacity, duration, inventory):
+    def __init__(self, name, capacity, duration, inventory,activity):
         self.name = name
         self.capacity = capacity
         self.duration = duration
         self.inventory = inventory
+        self.activity = activity
 
     def __str__(self):
         return "Конкурсы и развлечения"

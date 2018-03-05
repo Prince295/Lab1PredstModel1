@@ -24,14 +24,17 @@ def main_menu():
         set_event()
         org_ratio=get_organisator_ratio()
         point = 0
+        budget = 0
         for key, val in choice_organisator_dict:
             point+=org_ratio[val]
+            budget+=org[val]['Budget']
         point/=choice_organisator_number
         if point<8:
 
 
+
         else:
-        modulate_event()
+
 
 
 
