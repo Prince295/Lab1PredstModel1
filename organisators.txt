@@ -1,0 +1,1 @@
+1:{'Education': 1, 'Portfolio': 1, 'Age': 1, 'Appearance': 1, 'Sex': 1, 'Speciality': 1, 'Temper': 1, 'Budget': 1}
