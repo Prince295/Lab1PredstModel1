@@ -1,5 +1,6 @@
 from functions import *
 from models import *
+import numpy as np
 first_choice = {1 : "Добавить",
                     2 : "Моделирование"}
 second_choice = {1 : "Организаторы",
@@ -52,16 +53,119 @@ def main_menu():
                             flag2=dish[i].consistency['Жиры']
                     budget = budget - dish[flag1].price
                     count.dishes[dish[flag1].name]+=1
+                    flag1=0
+                    flag2=0
+                    for i in range(len(entertaiment)):
+                        if entertaiment[i].activity == "Высокая физическая активность":
+                            if entertaiment[i].duration > flag2:
+                                flag1 = i
+                                flag2 = entertaiment[i].duration
+                    count.entertaiments[entertaiment[flag1].name]+=1
 
                 if guest_dict[val]['Social_status'] == 2:
+                    flag1 = 0
+                    flag2 = 0
+                    for i in range( len( drink ) ):
+                        if drink[i].alcohol == "Нет":
+                            if drink[i].price > flag2:
+                                flag1 = i
+                                flag2 = drink[i].price
+                    budget = budget - drink[flag1].price
+                    count.drinks[drink[flag1].name] += 1
+                    count.dishes[dish[np.random.randint(flag1)].name] += 1
+                    flag1 = 0
+                    flag2 = 0
+                    for i in range( len( entertaiment ) ):
+                        if entertaiment[i].activity == "Высокая физическая активность":
+                            if entertaiment[i].duration > flag2:
+                                flag1 = i
+                                flag2 = entertaiment[i].duration
+                    count.entertaiments[entertaiment[flag1].name] += 1
                 if guest_dict[val]['Social_status'] == 3:
+                    flag1 = 0
+                    flag2 = 0
+                    for i in range( len( drink ) ):
+                        if drink[i].alcohol == "Есть":
+                            if drink[i].price > flag2:
+                                flag1 = i
+                                flag2 = drink[i].price
+                    budget = budget - drink[flag1].price
+                    count.drinks[drink[flag1].name] += 1
+                    flag1 = 0
+                    flag2 = 0
+                    for i in range( len( dish ) ):
+                        if dish[i].consistency['Белки'] > flag2:
+                            flag1 = i
+                            flag2 = dish[i].consistency['Белки']
+                    budget = budget - dish[flag1].price
+                    count.dishes[dish[flag1].name] += 1
+                    flag1 = 0
+                    flag2 = 999999
+                    for i in range( len( entertaiment ) ):
+                        if entertaiment[i].activity == "Средняя физическая активность":
+                            if entertaiment[i].duration < flag2:
+                                flag1 = i
+                                flag2 = entertaiment[i].duration
+                    count.entertaiments[entertaiment[flag1].name] += 1
+
                 if guest_dict[val]['Social_status'] == 4:
+                    flag1 = 0
+                    flag2 = 0
+                    for i in range( len( drink ) ):
+                        if drink[i].alcohol == "Есть":
+                            if drink[i].price > flag2:
+                                flag1 = i
+                                flag2 = drink[i].price
+                    budget = budget - drink[flag1].price
+                    count.drinks[drink[flag1].name] += 1
+                    flag1 = 0
+                    flag2 = 99999
+                    for i in range( len( dish ) ):
+                        if dish[i].consistency['Каллорийность'] < flag2:
+                            flag1 = i
+                            flag2 = dish[i].consistency['Каллорийность']
+                    budget = budget - dish[flag1].price
+                    count.dishes[dish[flag1].name] += 1
+                    flag1 = 0
+                    flag2 = 0
+                    for i in range( len( entertaiment ) ):
+                        if entertaiment[i].activity == "Низкая физическая активность":
+                            if entertaiment[i].duration > flag2:
+                                flag1 = i
+                                flag2 = entertaiment[i].duration
+                    count.entertaiments[entertaiment[flag1].name] += 1
                 if guest_dict[val]['Social_status'] == 5:
+                    flag1 = 0
+                    flag2 = 99999
+                    for i in range( len( drink ) ):
+                        if drink[i].alcohol == "Нет":
+                            if drink[i].price < flag2:
+                                flag1 = i
+                                flag2 = drink[i].price
+                    budget = budget - drink[flag1].price
+                    count.drinks[drink[flag1].name] += 1
+                    flag1 = 0
+                    flag2 = 99999
+                    for i in range( len( dish ) ):
+                        if dish[i].consistency['Жиры'] < flag2:
+                            flag1 = i
+                            flag2 = dish[i].consistency['Жиры']
+                    budget = budget - dish[flag1].price
+                    count.dishes[dish[flag1].name] += 1
+                    flag1 = 0
+                    flag2 = 99999
+                    for i in range( len( entertaiment ) ):
+                        if entertaiment[i].activity == "Низкая физическая активность":
+                            if entertaiment[i].duration < flag2:
+                                flag1 = i
+                                flag2 = entertaiment[i].duration
+                    count.entertaiments[entertaiment[flag1].name] += 1
 
 
 
 
         else:
+
 
 
 
