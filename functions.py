@@ -186,6 +186,8 @@ def get_organisator_ratio():
 
     return org_ratio
 
+print("1")
+
 
 
 
