@@ -1,3 +1,11 @@
 Иван:{'Temper': 3, 'Social_status': 1, 'Age': 20, 'Sex': 1}
 Ванесса:{'Temper': 2, 'Social_status': 2, 'Age': 15, 'Sex': 2}
 Адольф:{'Temper': 1, 'Social_status': 5, 'Age': 74, 'Sex': 1}
+Иван:{'Temper': 3, 'Social_status': 1, 'Age': 20, 'Sex': 1}
+Ванесса:{'Temper': 2, 'Social_status': 2, 'Age': 15, 'Sex': 2}
+Адольф:{'Temper': 1, 'Social_status': 5, 'Age': 74, 'Sex': 1}
+Ирина:{'Temper': 1, 'Social_status': 1, 'Age': 24, 'Sex': 2}
+Иван:{'Temper': 3, 'Social_status': 1, 'Age': 20, 'Sex': 1}
+Ванесса:{'Temper': 2, 'Social_status': 2, 'Age': 15, 'Sex': 2}
+Адольф:{'Temper': 1, 'Social_status': 5, 'Age': 74, 'Sex': 1}
+Ирина:{'Temper': 3, 'Social_status': 5, 'Age': 96, 'Sex': 2}

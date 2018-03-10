@@ -1,6 +1,7 @@
 from models import *
 import json
 import re
+import pickle
 
 org = {}
 guest_dict = {}
@@ -8,23 +9,50 @@ event_dict = {}
 drink = []
 dish = []
 entertaiment=[]
+place = []
+count = Count
 f1 = open( "organisators.txt", 'r' )
 f3 = open( "guests.txt", 'r' )
 for i in f1.readlines():
-    key, val = i.strip().split( ':', maxsplit=1 )
+    key,val = i.strip().split( ':', maxsplit=1)
+    val = val[1:len(val)-1]
+    val = re.sub(r"\'", '', val )
+    val = re.sub(r',', ":", val)
+    list1=[]
+    list1 = val.strip().split(':')
+    for i in range(len(list1)):
+        if list1[i][0]==' ':
+            list1[i] = list1[i][1:]
+    l = 0
+    val = {}
+    while l <= len(list1)-2:
+        val[list1[l]] = list1[l+1]
+        l+=2
     org[key] = val
 for i in f3.readlines():
     key, val = i.strip().split( ':', maxsplit=1 )
+    val = val[1:len( val ) - 1]
+    val = re.sub( r"\'", '', val )
+    val = re.sub( r',', ":", val )
+    list1 = []
+    list1 = val.strip().split( ':' )
+    for i in range( len( list1 ) ):
+        if list1[i][0] == ' ':
+            list1[i] = list1[i][1:]
+    l = 0
+    val = {}
+    while l <= len( list1 ) - 2:
+        val[list1[l]] = list1[l + 1]
+        l += 2
     guest_dict[key] = val
 f1.close()
 f3.close()
 
-
 def input_numbers(dictionary, label):
     while True:
         print( label )
-        for i in range( len( dictionary ) ):
-            print( "{} - {}".format( i + 1, dictionary[i + 1] ) )
+        for item in dictionary.keys():
+            print( "{} - {}".format( item, dictionary[item] ) )
         x = input( "Введите вариант" )
         try:
             x = int( x )
@@ -32,9 +60,10 @@ def input_numbers(dictionary, label):
             print( "Это не число. Пожалуйста, введите число, соответствующее номеру варианта " )
             continue
 
-        if x > 0 and x < len( dictionary ) + 1:
-            return int( x )
-            break
+        for item in dictionary.keys():
+            if x==item:
+                return int( x )
+                break
         else:
             print( "Введите число, соответсвующее номеру варианта" )
 
@@ -72,14 +101,13 @@ def input_mutch(dictionary):
     number = input_number( "Количество людей" )
     for i in range( number ):
         add = input_numbers( dictionary, 'Выбор' )
-        for key, val in dictionary:
-            out_dict[add] = val
+        for key, val in dictionary.items():
+            out_dict.update({add : dictionary[add]})
         dictionary.pop( add )
     return out_dict, number
 
-
 def set_organisator():
-    case1 = Organisator( input_numbers( Organisator.amount ), 0 )
+    case1 = Organisator( input_numbers( Organisator.amount,Organisator.amount_label.__str__() ), 0 )
     if case1.amount == 2:
         case1.numbers = input_number( case1.numbers_label.__str__() )
     for i in range( case1.numbers ):
@@ -95,9 +123,10 @@ def set_organisator():
 
         org.update( {key: value} )
         # value.clear()
-    f = open( 'organisators.txt', 'a' )
-    for key, val in org.items():
-        f.write( '{}:{}\n'.format( key, val ) )
+    f = open( 'organisators.txt', 'ab' )
+    pickle.dump(org,f)
+    # for key, val in org.items():
+    #     f.write( '{}:{}\n'.format( key, val ) )
     f.close()
 
 
@@ -134,9 +163,10 @@ def set_event():
     key = case3.date
     value = case3.event_type
     event_dict.update( {key: value} )
-    f = open( 'events.txt', 'a' )
-    for key, val in event_dict.items():
-        f.write( '{}:{}\n'.format( key, val ) )
+    f = open( 'events.txt', 'ab' )
+    pickle.dump(event_dict,f)
+    # for key, val in event_dict.items():
+    #     f.write( '{}:{}\n'.format( key, val ) )
     f.close()
     return event_dict
 
@@ -167,6 +197,27 @@ def set_entertaiment():
     entertaiment.append( Entertaiment( 'Творческие конкурсы', 8, Entertaiment.inventory[2], 200, Entertaiment.activity[1] ) )
     return entertaiment
 
+def set_place():
+    place.append(Place(20, 8000, Place.design[1], 160, "Лиговский проспект, дом 50"))
+    place.append(Place(18, 7000, Place.design[3], 100, "Невский проспект, дом 18"))
+    place.append(Place(14, 5000, Place.design[4], 110, "1я Красноармейская ул. дом 16"))
+    place.append(Place(10, 4000, Place.design[3], 85, "Коломяжский пр. дом 20"))
+    place.append(Place(12, 6000, Place.design[2], 90, "Думская ул. дом 4"))
+    return place
+
+def set_count():
+    for i in range(len(drink)):
+        count.drinks[drink[i].name] = 0
+    for i in range(len(dish)):
+        count.dishes[dish[i].name] = 0
+    for i in range(len(entertaiment)):
+        count.entertaiments[entertaiment[i].name] = 0
+    count.guests['Студент'] = 0
+    count.guests['Школьник'] = 0
+    count.guests['Начинающий работник'] = 0
+    count.guests['Работник со стажем'] = 0
+    count.guests['Пенсионер'] = 0
+    return count
 
 
 def get_organisator_ratio():
@@ -186,7 +237,7 @@ def get_organisator_ratio():
 
     return org_ratio
 
-print("1")
+
 
 
 

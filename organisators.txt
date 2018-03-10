@@ -1,1 +1,6 @@
-1:{'Education': 1, 'Portfolio': 1, 'Age': 1, 'Appearance': 1, 'Sex': 1, 'Speciality': 1, 'Temper': 1, 'Budget': 1}
+1:{'Education': 1, 'Portfolio': 1, 'Age': 1, 'Appearance': 1, 'Sex': 1, 'Speciality': 1, 'Temper': 1, 'Budget': 100000}
+Faya:{'Education': 2, 'Portfolio': 2, 'Age': 180, 'Appearance': 2, 'Sex': 2, 'Speciality': 3, 'Temper': 3, 'Budget': 100000}
+1:{'Education': 1, 'Portfolio': 1, 'Age': 1, 'Appearance': 1, 'Sex': 1, 'Speciality': 1, 'Temper': 1, 'Budget': 100000}
+Faya:{'Education': 2, 'Portfolio': 2, 'Age': 180, 'Appearance': 2, 'Sex': 2, 'Speciality': 3, 'Temper': 3, 'Budget': 100000}
+Анна Петрова:{'Education': 4, 'Portfolio': 4, 'Age': 20, 'Appearance': 1, 'Sex': 2, 'Speciality': 3, 'Temper': 3, 'Budget': 20000}
+Николай :{'Education': 3, 'Portfolio': 3, 'Age': 40, 'Appearance': 2, 'Sex': 1, 'Speciality': 1, 'Temper': 1, 'Budget': 20000}
