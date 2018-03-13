@@ -2,7 +2,8 @@ from functions import *
 from models import *
 import numpy as np
 first_choice = {1 : "Добавить",
-                2 : "Моделирование"}
+                2 : "Моделирование",
+                3 : "Выход"}
 second_choice = {1 : "Организаторы",
                  2 : "Гости"}
 set_dishes()
@@ -13,9 +14,45 @@ set_count()
 
 
 def main_menu():
-    # Ветвь добавления Организаторов и гостей
     while True:
+        f1 = open( "organisators.txt", 'r' ) #Открываем файл
+        f3 = open( "guests.txt", 'r' )
+        for i in f1.readlines(): #Читаем построчно
+            key, val = i.strip().split( ':', maxsplit=1 ) #Разделяем ОДИН раз по разделителю - двоеточие
+            val = val[1:len( val ) - 1] #Удаляем { и }
+            val = re.sub( r"\'", '', val ) # замена кавычек
+            val = re.sub( r',', ":", val ) # замена запятых
+            list1 = []
+            list1 = val.strip().split( ':' ) #разделяем по двоеточиям без ограничений
+            for i in range( len( list1 ) ): #удаляем пробелы в начале элементов
+                if list1[i][0] == ' ':
+                    list1[i] = list1[i][1:]
+            l = 0
+            val = {}
+            while l <= len( list1 ) - 2: #нечетные элементы списка - ключи словаря, четные - значения
+                val[list1[l]] = list1[l + 1]
+                l += 2
+            org[key] = val #составляем словарь
+        for i in f3.readlines():
+            key, val = i.strip().split( ':', maxsplit=1 )
+            val = val[1:len( val ) - 1]
+            val = re.sub( r"\'", '', val )
+            val = re.sub( r',', ":", val )
+            list1 = []
+            list1 = val.strip().split( ':' )
+            for i in range( len( list1 ) ):
+                if list1[i][0] == ' ':
+                    list1[i] = list1[i][1:]
+            l = 0
+            val = {}
+            while l <= len( list1 ) - 2:
+                val[list1[l]] = list1[l + 1]
+                l += 2
+            guest_dict[key] = val
+        f1.close()
+        f3.close()
         choice = input_numbers(first_choice, "Меню")
+        # Ветвь добавления Организаторов и гостей
         if choice == 1:
             choice2 = input_numbers(second_choice, "Добавление")
             if choice2 == 1:
@@ -23,15 +60,15 @@ def main_menu():
             else:
                 set_guest()
 
+
         #Ветвь моделирования
-        else:
+        elif choice== 2:
             print("Выбор организаторов")
-            choice_organisator_dict, choice_organisator_number =  input_mutch(get_names(org))
+            choice_organisator_dict, choice_organisator_number =  input_mutch(get_names(org)) #считываем выбранных организаторов
             print("Выбор гостей")
-            choice_guest_dict, choice_guest_number = input_mutch(get_names(guest_dict))
-            set_event()
-            print(org)
-            org_ratio=get_organisator_ratio()
+            choice_guest_dict, choice_guest_number = input_mutch(get_names(guest_dict)) #считываем выбранных гостей
+            set_event() # запуск функции генерации праздников
+            org_ratio=get_organisator_ratio() #получаем коэффициенты характеристик организаторов
             point = 0
             budget = 0
             overall_enjoy=1
@@ -45,7 +82,7 @@ def main_menu():
             #Выбираем место проведения
             for i in range(len(place)):
                 if choice_guest_number <= place[i].capacity:
-                    for key, val in choice_guest_dict.items():
+                    for key, val in choice_guest_dict.items(): #считаем гостей по социальному статусу
                         if guest_dict[val]['Social_status'] == '1':
                             count.guests['Студент']+=1
                         if guest_dict[val]['Social_status'] == '2':
@@ -59,7 +96,7 @@ def main_menu():
                     max_guests=0
                     index =''
                     for key, val in count.guests.items():
-                        if count.guests[key]>max_guests:
+                        if count.guests[key]>max_guests: #находим наиболее часто встречающуюся социальную группу
                             max_guests = count.guests[key]
                             index = key
                     if index == 'Школьник' and place[i].design == 'Детский':
@@ -232,14 +269,20 @@ def main_menu():
                     budget = budget - entertaiment[flag1].price
                     if int(budget) > 0:
                         count.entertaiments.update({entertaiment[flag1].name:count.entertaiments[entertaiment[flag1].name]+1})
-
+            # вывод на результатов моделирования на экран
+            print("Адрес места проведения")
             print(place[mark].address)
+            print("Остаток бюджета")
             print(budget)
+            print( "Количество гостей" )
+            print( choice_guest_number )
+            print("Меню")
             print(count.dishes)
             print(count.drinks)
-            print(count.guests)
+            print("Список развлечений")
             print(count.entertaiments)
-            print(point)
+        else:
+            break
 
 if __name__ == '__main__':
     main_menu()

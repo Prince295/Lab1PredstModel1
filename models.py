@@ -9,7 +9,7 @@ class Organisator():
 
     numbers=0
 
-    def __init__(self, amount, numbers = 0):
+    def __init__(self, amount, numbers = 0): #Вызов конструктора
         self.amount = amount
         self.numbers = numbers
 
@@ -45,7 +45,7 @@ class Person(Organisator):
     appearance_label = "Внешность"
     budget=0
     budget_label = "Предполагаемый бюджет"
-    def __init__(self, education, portfolio, temper, age, sex, speciality, appearance, budget):
+    def __init__(self, education, portfolio, temper, age, sex, speciality, appearance, budget): #Вызов конструктора
         self.budget = budget
         self.temper = temper
         self.speciality = speciality
@@ -63,7 +63,7 @@ class Guest():
     amount=0
     amount_label = "Количество гостей"
 
-    def __init__(self, amount):
+    def __init__(self, amount): #Вызов конструктора
         self.amount = amount
 
 
@@ -84,7 +84,7 @@ class Human(Guest):
               3: "Равнодушный"}
     temper_label = "Характер"
 
-    def __init__(self,age,sex,social_status,temper):
+    def __init__(self,age,sex,social_status,temper): #Вызов конструктора
         self.age = age
         self.sex = sex
         self.social_status = social_status
@@ -118,7 +118,7 @@ class Place():
     design_label = "Дизайн интерьера"
     price=0
     price_label = "цена"
-    def __init__(self, capacity, price, design, square, address):
+    def __init__(self, capacity, price, design, square, address): #Вызов конструктора
         self.capacity = capacity
         self.price = price
         self.design = design
@@ -135,7 +135,7 @@ class Dishes():
     weight_label = "Вес"
     price=0
     price_label = "цена"
-    def __init__(self, name, weight, consistency, price):
+    def __init__(self, name, weight, consistency, price): #Вызов конструктора
         self.name = name
         self.price = price
         self.consistency = consistency
@@ -156,17 +156,17 @@ class Drinks():
     price=0
     price_label = "Цена"
 
-    def __init__(self, name, volume, alcohol, price):
+    def __init__(self, name, volume, alcohol, price): #Вызов конструктора
         self.name = name
         self.volume = volume
         self.price = price
         self.alcohol = alcohol
 
-    def __str__(self):
+    def __str__(self): #Возвращение строки в случае обращения к классу напрямую
         return "Напитки"
 
 
-class Entertaiment():
+class Entertaiment(): #Вызов конструктора
     name=""
     name_label = "Название"
     capacity=0
@@ -181,7 +181,7 @@ class Entertaiment():
                 2 : "Средняя физическая активность",
                 3 : "Высокая физическая активность"}
 
-    def __init__(self, name, capacity, inventory, duration, activity):
+    def __init__(self, name, capacity, inventory, duration, activity): #Вызов конструктора
         self.name = name
         self.capacity = capacity
         self.duration = duration
@@ -196,7 +196,7 @@ class Count():
     dishes = {}
     entertaiments = {}
     guests = {}
-    def __init__(self, drinks, dishes, entertaiments,guests):
+    def __init__(self, drinks, dishes, entertaiments,guests): #Вызов конструктора
         self.drinks = drinks
         self.dishes = dishes
         self.entertaiments = entertaiments

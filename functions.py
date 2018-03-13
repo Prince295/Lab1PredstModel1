@@ -48,6 +48,7 @@ for i in f3.readlines():
 f1.close()
 f3.close()
 
+# Выбор вариантов ответа
 def input_numbers(dictionary, label):
     while True:
         print( label )
@@ -55,62 +56,75 @@ def input_numbers(dictionary, label):
             print( "{} - {}".format( item, dictionary[item] ) )
         x = input( "Введите вариант" )
         try:
-            x = int( x )
+            x = int( x ) #Проверка корректности ввода числа
         except ValueError:
             print( "Это не число. Пожалуйста, введите число, соответствующее номеру варианта " )
             continue
 
-        for item in dictionary.keys():
+        for item in dictionary.keys(): #перебор ключей в словаре. Проверяем есть ли такой вариант ответа
             if x==item:
                 return int( x )
                 break
         else:
             print( "Введите число, соответсвующее номеру варианта" )
 
-
+# Ввод целого числа
 def input_number(param):
     print( param )
     while True:
         x = input( "Введите целое число" )
         try:
-            x = int( x )
+            x = int( x ) #Проверка корректности ввода числа
         except ValueError:
             print( "Это не целое число. Пожалуйста, введите число" )
             continue
         return x
+
+#     проверяем корректность введенного числа в контексте вариантов ответа
+def correct_number(param,dictionary):
+    while True:
+        number = input_number(param)
+        if number > len(dictionary): #Сравнение введенного числа с количеством вариантов выбора
+            print("Значение больше количества вариантов выбора")
+            print("Количество вариантов = {}".format(len(dictionary)))
+        elif number <=0:
+            print("Вы не выбрали ничего. Пожалуйста введите корректное положительное число")
+        else:
+            break
+    return number
 
 
 def input_date(label):
     while True:
         print( label )
         date = input( "Введите дату в формате dd-mm-gggg " )
-        result = re.findall( r'\d{2}[-./:]\d{2}[-./:]\d{4}', date )
+        result = re.findall( r'\d{2}[-./:]\d{2}[-./:]\d{4}', date ) #проверка введенной строки на соответствие шаблону даты
         if result == []:
             print( "Введите дату в корректном формате" )
         else:
-            day, month, year = re.split( r'[-./:]', result[0], maxsplit=2 )
+            day, month, year = re.split( r'[-./:]', result[0], maxsplit=2 ) #Разделяем строку с датой на день, месяц, год
             if (0 < int( day ) < 32) and (0 < int( month ) < 13) and (2017 < int( year ) < 2099):
-                return "{}.{}.{}".format( day, month, year )
+                return "{}.{}.{}".format( day, month, year ) #Возвращаем дату в виде строки
                 break
             else:
                 print( "Такой даты не существует, или запись на данную дату невозможна" )
 
 
-def input_mutch(dictionary):
+def input_mutch(dictionary): #Функция выбора вариантов в словаре. После выбора словарь обновляется. Выбранный вариант удаляется. Результаты выбора возвращаются
     out_dict = {}
-    number = input_number( "Количество людей" )
+    number = correct_number( "Количество людей",dictionary ) #Получаем количество выбранных персон
     for i in range( number ):
-        add = input_numbers( dictionary, 'Выбор' )
-        for key, val in dictionary.items():
-            out_dict.update({add : dictionary[add]})
-        dictionary.pop( add )
-    return out_dict, number
+        add = input_numbers( dictionary, 'Выбор' ) #Вывод меню с вариантами и выбор варианта пользователем
+        for key, val in dictionary.items(): #обращаемся к словарю с вариантами
+            out_dict.update({add : dictionary[add]}) #заносим результаты выбора в новый словарь
+        dictionary.pop( add ) #Удаляем из словаря с вариантами выбора выбранный вариант
+    return out_dict, number #Возвращаем словарь с выбранными персонами и количество выбранных персон
 
-def set_organisator():
+def set_organisator(): #Функция добавления пользователем нового организатора
     case1 = Organisator( input_numbers( Organisator.amount,Organisator.amount_label.__str__() ), 0 )
-    if case1.amount == 2:
+    if case1.amount == 2: #Проверка того, один ли это человек или группа людей
         case1.numbers = input_number( case1.numbers_label.__str__() )
-    for i in range( case1.numbers ):
+    for i in range( case1.numbers ): #Цикл с количеством повторений, равным количеству добавляемых людей
         key = input( "Введите имя" )
         value = {'Education': input_numbers( Person.education, Person.education_label.__str__() ),
                  'Portfolio': input_numbers( Person.portfolio, Person.portfolio_label.__str__() ),
@@ -119,18 +133,18 @@ def set_organisator():
                  'Sex': input_numbers( Person.sex, Person.sex_label.__str__() ),
                  'Speciality': input_numbers( Person.speciality, Person.speciality_label.__str__() ),
                  'Temper': input_numbers( Person.temper, Person.temper_label.__str__() ),
-                 'Budget': input_number( Person.budget_label.__str__() )}
+                 'Budget': input_number( Person.budget_label.__str__() )} #Создание словаря в словаре "Организатор"
 
         org.update( {key: value} )
         # value.clear()
-    f = open( 'organisators.txt', 'ab' )
-    pickle.dump(org,f)
+    f = open( 'organisators.txt', 'ab' ) #Открываем файл на добавление в двоичном формате
+    pickle.dump(org,f) #Добавляем в файл результаты добавления
     # for key, val in org.items():
     #     f.write( '{}:{}\n'.format( key, val ) )
     f.close()
 
 
-def get_names(dictionary):
+def get_names(dictionary): #Функция преобразования словаря вида {Имя : параметры} в словарь вида {число : имя} для меню выбора
     names = {}
     i = 1
     for item in dictionary.keys():
@@ -139,7 +153,7 @@ def get_names(dictionary):
     return names
 
 
-def set_guest():
+def set_guest(): #Добавление гостя. Все аналогично добавлению организатора
     case2 = Guest
     case2.amount = input_number( case2.amount_label.__str__() )
     for i in range( case2.amount ):
@@ -156,7 +170,7 @@ def set_guest():
     return guest_dict
 
 
-def set_event():
+def set_event(): #Добавление мероприятия. Аналогично добавлению организатора
     case3 = Event
     case3.event_type = input_numbers( case3.event_type, case3.event_type_label.__str__() )
     case3.date = input_date( case3.date_label.__str__() )
@@ -171,7 +185,7 @@ def set_event():
     return event_dict
 
 
-def set_dishes():
+def set_dishes(): #добавление блюд. Пользовательский ввод не предусмотрен
     dish.append( Dishes( 'Фаршированный цыпленок', 200, {'Белки': 50, 'Жиры': 35, 'Углеводы': 70, 'Каллорийность': 480}, 250 ) )
     dish.append( Dishes( 'Свиная отбивная', 200, {'Белки': 30, 'Жиры': 75, 'Углеводы': 60, 'Каллорийность': 430}, 350 ) )
     dish.append( Dishes( 'Запеченая рыба в сливках', 250, {'Белки': 40, 'Жиры': 65, 'Углеводы': 70, 'Каллорийность': 370}, 420 ) )
@@ -180,7 +194,7 @@ def set_dishes():
     return dish
 
 
-def set_drinks():
+def set_drinks(): #добавление напитков. Пользовательский ввод не предусмотрен
     drink.append( Drinks( 'Сок', 200, Drinks.alcohol[2], 100 ) )
     drink.append( Drinks( 'Молочный коктейль', 250, Drinks.alcohol[2], 150 ) )
     drink.append( Drinks( 'Газированные напитки', 200, Drinks.alcohol[2], 130 ) )
@@ -190,14 +204,14 @@ def set_drinks():
     return drink
 
 
-def set_entertaiment():
+def set_entertaiment(): #добавление развлечений. Пользовательский ввод не предусмотрен
     entertaiment.append( Entertaiment( 'Караоке', 4, Entertaiment.inventory[3], 300, Entertaiment.activity[1] ) )
     entertaiment.append( Entertaiment( 'Дискотека', 15, Entertaiment.inventory[2], 400, Entertaiment.activity[2] ) )
     entertaiment.append( Entertaiment( 'Подвижные конкурсы', 6, Entertaiment.inventory[2], 200, Entertaiment.activity[3] ) )
     entertaiment.append( Entertaiment( 'Творческие конкурсы', 8, Entertaiment.inventory[2], 200, Entertaiment.activity[1] ) )
     return entertaiment
 
-def set_place():
+def set_place(): #добавление мест проведения. Пользовательский ввод не предусмотрен
     place.append(Place(20, 8000, Place.design[1], 160, "Лиговский проспект, дом 50"))
     place.append(Place(18, 7000, Place.design[3], 100, "Невский проспект, дом 18"))
     place.append(Place(14, 5000, Place.design[4], 110, "1я Красноармейская ул. дом 16"))
@@ -205,7 +219,7 @@ def set_place():
     place.append(Place(12, 6000, Place.design[2], 90, "Думская ул. дом 4"))
     return place
 
-def set_count():
+def set_count(): #функция подсчета напитков, блюд, развлечений и гостей
     for i in range(len(drink)):
         count.drinks[drink[i].name] = 0
     for i in range(len(dish)):
@@ -217,10 +231,10 @@ def set_count():
     count.guests['Начинающий работник'] = 0
     count.guests['Работник со стажем'] = 0
     count.guests['Пенсионер'] = 0
-    return count
+    return count #фактически возвращается экземпляр класса с нулевыми значениями для дальнейшего подсчета в процессе моделирования
 
 
-def get_organisator_ratio():
+def get_organisator_ratio(): #считаем "успешность" Организатора
     org_ratio = {}
     i=1
     for item in org.keys():
