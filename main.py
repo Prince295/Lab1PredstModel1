@@ -3,11 +3,15 @@ import numpy as np
 from functions import *
 from models import *
 
-first_choice = {1 : "Добавить",
+first_choice = {1 : "Редактировать",
                 2 : "Моделирование",
                 3 : "Выход"}
 second_choice = {1 : "Организаторы",
-                 2 : "Гости"}
+                 2 : "Гости",
+                 3 : "Вернуться в главное меню"}
+third_choice = {1 : "Добавить",
+                2 : "Удалить",
+                3 : "Вернуться в главное меню"}
 set_dishes()
 set_drinks()
 set_entertaiment()
@@ -56,18 +60,49 @@ def main_menu():
         choice = input_numbers(first_choice, "Меню")
         # Ветвь добавления Организаторов и гостей
         if choice == 1:
-            choice2 = input_numbers(second_choice, "Добавление")
+            choice2 = input_numbers(second_choice, "Редактирование")
             if choice2 == 1:
-                set_organisator()
+                choice3 = input_numbers(third_choice, "Добавить/удалить")
+                if choice3 == 1:
+                    set_organisator()
+                elif choice3 == 2:
+                    for k in org.keys():
+                        print(k)
+                    if is_ok() == False:
+                        continue
+                    delete_person(org,"Удаление организатора", 'organisators.txt')
+                else:
+                    continue
+            elif choice2== 2:
+                choice3 = input_numbers( third_choice, "Добавить/удалить" )
+                if choice3 == 1:
+                    set_guest()
+                elif choice3 == 2:
+                    for k in guest_dict.keys():
+                        print(k)
+                    if is_ok() == False:
+                        continue
+                    delete_person( guest_dict, "Удаление гостя", 'guests.txt' )
+                else:
+                    continue
             else:
-                set_guest()
-
+                continue
 
         #Ветвь моделирования
         elif choice== 2:
             print("Выбор организаторов")
+            for k,v in get_names(org).items():
+                print("Организатор {} : \n Образование  - {} \n Портфолио  - {} \n Характер  - {} \n Возраст  - {} \n".format(v,
+                                                                                                               Person.education[int(org[v]['Education'])],
+                                                                                                               Person.portfolio[int(org[v]['Portfolio'])],
+                                                                                                               Person.temper[int(org[v]['Temper'])],
+                                                                                                               org[v]['Age']) )
+            if is_ok() == False:
+                continue
             choice_organisator_dict, choice_organisator_number =  input_mutch(get_names(org)) #считываем выбранных организаторов
             print("Выбор гостей")
+            if is_ok() == False:
+                continue
             choice_guest_dict, choice_guest_number = input_mutch(get_names(guest_dict)) #считываем выбранных гостей
             event_duration = set_event() # запуск функции генерации праздников
             org_ratio=get_organisator_ratio() #получаем коэффициенты характеристик организаторов

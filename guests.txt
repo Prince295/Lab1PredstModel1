@@ -1,11 +1,9 @@
-Ирина Петрова:{'Temper': '1', 'Social_status': '3', 'Age': '30', 'Sex': '2', 'Sentiment': 15}
-Татьяна Орлова:{'Temper': '3', 'Social_status': '2', 'Age': '12', 'Sex': '2', 'Sentiment': 12}
-Иван Петров:{'Temper': '3', 'Social_status': '4', 'Age': '40', 'Sex': '1', 'Sentiment': 15}
-Тарас Бульба:{'Temper': '2', 'Social_status': '5', 'Age': '100', 'Sex': '1', 'Sentiment': 9}
-Александр Петров:{'Temper': '1', 'Social_status': '1', 'Age': '22', 'Sex': '1', 'Sentiment': '9'}
-Лев Львиный:{'Temper': '2', 'Social_status': '1', 'Age': '19', 'Sex': '1', 'Sentiment': '12'}
-Алиса Селезнева:{'Temper': '1', 'Social_status': '2', 'Age': '15', 'Sex': '2', 'Sentiment': '15'}
-Ольга Петрова:{'Temper': '3', 'Social_status': '3', 'Age': '28', 'Sex': '2', 'Sentiment': '20'}
+Ирина Петрова:{'Temper': '1', 'Social_status': '3', 'Age': '30', 'Sex': '2', 'Sentiment': '25'}
+Татьяна Орлова:{'Temper': '3', 'Social_status': '2', 'Age': '12', 'Sex': '2', 'Sentiment': '25'}
+Александр Петров:{'Temper': '1', 'Social_status': '1', 'Age': '22', 'Sex': '1', 'Sentiment': '25'}
+Лев Львиный:{'Temper': '2', 'Social_status': '1', 'Age': '19', 'Sex': '1', 'Sentiment': '25'}
+Алиса Селезнева:{'Temper': '1', 'Social_status': '2', 'Age': '15', 'Sex': '2', 'Sentiment': '25'}
+Ольга Петрова:{'Temper': '3', 'Social_status': '3', 'Age': '28', 'Sex': '2', 'Sentiment': '25'}
 Игнат Ахметов:{'Temper': '2', 'Social_status': '1', 'Age': '18', 'Sex': '1', 'Sentiment': '12'}
 Тамара Боброва:{'Temper': '3', 'Social_status': '5', 'Age': '60', 'Sex': '2', 'Sentiment': '15'}
 Егерь:{'Temper': '2', 'Social_status': '5', 'Age': '66', 'Sex': '1', 'Sentiment': '6'}

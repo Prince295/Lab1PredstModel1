@@ -144,6 +144,22 @@ def set_organisator(): #Функция добавления пользовате
         f.write( '{}:{}\n'.format( key, val ) )
     f.close()
 
+def delete_person(dictionary, label,textfile):
+    dictionary.pop(get_names(dictionary)[input_numbers(get_names(dictionary),label)])
+    f = open( textfile, 'w' )
+    for key, val in dictionary.items():
+        f.write( '{}:{}\n'.format( key, val ) )
+    f.close()
+    return dictionary
+def is_ok():
+    ok={1 : 'Продолжить',
+        2 : 'Вернуться'}
+    if input_numbers(ok,"Хотите продолжить?") == 1:
+        return True
+    else:
+        return False
+
+
 
 def get_names(dictionary): #Функция преобразования словаря вида {Имя : параметры} в словарь вида {число : имя} для меню выбора
     names = {}
