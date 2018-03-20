@@ -1,5 +1,20 @@
-from datetime import datetime
+sentiment_ratio = {'Восторжен' : 25,
+             'Счастлив' : 20,
+             'Доволен' : 15,
+             'Бодр' : 12,
+             'Равнодушен' : 9,
+             'Унывает' : 6,
+             'Грустит' : 3,
+             'Вне себя от злости' : 0 }
 
+sentiment = {1 : 'Восторжен',
+                 2 : 'Счастлив',
+                 3 : 'Доволен',
+                 4 : 'Бодр',
+                 5 : 'Равнодушен',
+                 6 : 'Унывает',
+                 7 : 'Грустит',
+                 8 : 'Вне себя от злости'}
 
 class Organisator():
     amount_label = "Огранизатор"
@@ -43,10 +58,8 @@ class Person(Organisator):
     appearance={1 : "Располагающая",
                 2 : "Отталкивающая"}
     appearance_label = "Внешность"
-    budget=0
-    budget_label = "Предполагаемый бюджет"
-    def __init__(self, education, portfolio, temper, age, sex, speciality, appearance, budget): #Вызов конструктора
-        self.budget = budget
+
+    def __init__(self, education, portfolio, temper, age, sex, speciality, appearance): #Вызов конструктора
         self.temper = temper
         self.speciality = speciality
         self.sex = sex
@@ -83,12 +96,15 @@ class Human(Guest):
               2: "Агрессивный",
               3: "Равнодушный"}
     temper_label = "Характер"
+    sentiment_number = 0
 
-    def __init__(self,age,sex,social_status,temper): #Вызов конструктора
+    def __init__(self,age,sex,social_status,temper,sentiment_number): #Вызов конструктора
         self.age = age
         self.sex = sex
         self.social_status = social_status
         self.temper = temper
+        self.sentiment_number = sentiment_number
+
 
 class Event():
     event_type={1 : "Новый Год",
@@ -103,6 +119,10 @@ class Event():
     event_type_label = "Праздник"
     date=0
     date_label = "Дата праздника"
+    duration = 0
+    def __init__(self, event_type, duration):
+        self.event_type = event_type
+        self.duration = duration
 
 class Place():
     capacity=0

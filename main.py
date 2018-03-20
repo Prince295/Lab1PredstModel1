@@ -1,6 +1,8 @@
+import numpy as np
+
 from functions import *
 from models import *
-import numpy as np
+
 first_choice = {1 : "Добавить",
                 2 : "Моделирование",
                 3 : "Выход"}
@@ -67,7 +69,7 @@ def main_menu():
             choice_organisator_dict, choice_organisator_number =  input_mutch(get_names(org)) #считываем выбранных организаторов
             print("Выбор гостей")
             choice_guest_dict, choice_guest_number = input_mutch(get_names(guest_dict)) #считываем выбранных гостей
-            set_event() # запуск функции генерации праздников
+            event_duration = set_event() # запуск функции генерации праздников
             org_ratio=get_organisator_ratio() #получаем коэффициенты характеристик организаторов
             point = 0
             budget = 0
@@ -77,7 +79,6 @@ def main_menu():
             # считаем бюджет и "уровень" организатора
             for key, val in choice_organisator_dict.items():
                 point+=int(org_ratio[val])
-                budget+=int(org[val]['Budget'])
 
             #Выбираем место проведения
             for i in range(len(place)):
@@ -106,173 +107,175 @@ def main_menu():
                         mark = np.random.randint(len(place)-1)
 
             #Вычет из бюджета цены аренды помещения и подсчет уровня каждого организатора по отдельности
-            budget = budget - place[mark].price
+            budget = budget + place[mark].price
             point/=choice_organisator_number
             # Ветвь успешных организаторов
             if point<8:
-                budget = budget/choice_guest_number
+
                 # В словаре выбранных гостей оцениваем их предпочтения, исходя из социального статуса
                 # , подсчитываем бюджет и составляем меню
-                for key, val in choice_guest_dict.items():
-                    # Студенты
-                    if guest_dict[val]['Social_status'] == '1':
-                        flag1=0
-                        flag2=0
-                        for i in range(len(drink)):
-                            if drink[i].alcohol == "Да":
-                                if drink[i].price > flag2:
+                timer = event_duration
+                while event_duration > 0:
+
+
+                    for key, val in choice_guest_dict.items():
+                        if timer > 0:
+                            i = np.random.randint( len( entertaiment ) )
+                            if entertaiment[i].duration < event_duration:
+                                timer = entertaiment[i].duration
+                                guest_dict[val]['Sentiment'] = int(
+                                    get_enjoing_entertaiment( guest_dict[val], entertaiment[i] ) ) + int(
+                                    guest_dict[val]['Sentiment'] )
+                                count.entertaiments[entertaiment[i].name] += 1
+                        # Студенты
+                        if guest_dict[val]['Social_status'] == '1':
+                            flag1=0
+                            flag2=0
+                            while True:
+                                i = np.random.randint(len(drink))
+                                if drink[i].alcohol == "Да":
                                     flag1 = i
                                     flag2 = drink[i].price
-                        budget = budget - drink[flag1].price
-                        if int(budget) > 0:
+                                    break
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_drink(guest_dict[val], drink[flag1])) + int(guest_dict[val]['Sentiment'])
+                            budget = budget + drink[flag1].price
                             count.drinks[drink[flag1].name]+=1
-                        flag1=0
-                        flag2=0
-                        for i in range(len(dish)):
-                            if dish[i].consistency['Жиры'] > flag2:
-                                flag1=i
-                                flag2=dish[i].consistency['Жиры']
-                        budget = budget - dish[flag1].price
-                        if int(budget) > 0:
+                            flag1=0
+                            flag2=0
+                            while True:
+                                i = np.random.randint( len( dish ) )
+                                if dish[i].consistency['Жиры'] > 55:
+                                    flag1=i
+                                    break
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_dish( guest_dict[val],
+                                                                                     dish[flag1] ))+int(guest_dict[val]['Sentiment'])
+                            budget = budget + dish[flag1].price
                             count.dishes[dish[flag1].name]+=1
-                        flag1=0
-                        flag2=0
-                        for i in range(len(entertaiment)):
-                            if entertaiment[i].activity == "Высокая физическая активность":
-                                if entertaiment[i].duration > flag2:
-                                    flag1 = i
-                                    flag2 = entertaiment[i].duration
-                        count.entertaiments[entertaiment[flag1].name]+=1
 
-                    # Школьники
-                    if guest_dict[val]['Social_status'] == '2':
-                        flag1 = 0
-                        flag2 = 0
-                        for i in range( len( drink ) ):
-                            if drink[i].alcohol == "Нет":
-                                if drink[i].price > flag2:
-                                    flag1 = i
-                                    flag2 = drink[i].price
-                        budget = budget - drink[flag1].price
-                        if int(budget) > 0:
+
+                        # Школьники
+                        if guest_dict[val]['Social_status'] == '2':
+                            flag1 = 0
+                            flag2 = 0
+                            for i in range( len( drink ) ):
+                                if drink[i].alcohol == "Нет":
+                                    if drink[i].price > flag2:
+                                        flag1 = i
+                                        flag2 = drink[i].price
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_drink(guest_dict[val], drink[flag1])) + int(guest_dict[val]['Sentiment'])
+                            budget = budget + drink[flag1].price
                             count.drinks[drink[flag1].name]+=1
-                        flag1 = np.random.randint(len(drink))
-                        budget = budget - drink[flag1].price
-                        if int(budget) > 0:
+                            flag1 = np.random.randint(len(dish))
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_dish( guest_dict[val],
+                                                                                     dish[flag1] ))+int(guest_dict[val]['Sentiment'])
+                            budget = budget + dish[flag1].price
                             count.dishes[dish[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 0
-                        for i in range( len( entertaiment ) ):
-                            if entertaiment[i].activity == "Высокая физическая активность":
-                                if entertaiment[i].duration > flag2:
-                                    flag1 = i
-                                    flag2 = entertaiment[i].duration
-                        count.entertaiments[entertaiment[flag1].name]+=1
 
-                    # Начинающие работники
-                    if guest_dict[val]['Social_status'] == '3':
-                        flag1 = 0
-                        flag2 = 0
-                        for i in range( len( drink ) ):
-                            if drink[i].alcohol == "Есть":
-                                if drink[i].price > flag2:
+                        # Начинающие работники
+                        if guest_dict[val]['Social_status'] == '3':
+                            flag1 = 0
+                            flag2 = 0
+                            while True:
+                                i = np.random.randint(len(drink))
+                                if drink[i].alcohol == "Да":
                                     flag1 = i
                                     flag2 = drink[i].price
-                        budget = budget - drink[flag1].price
-                        count.drinks[drink[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 0
-                        for i in range( len( dish ) ):
-                            if dish[i].consistency['Белки'] > flag2:
-                                flag1 = i
-                                flag2 = dish[i].consistency['Белки']
-                        budget = budget - dish[flag1].price
-                        count.dishes[dish[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 999999
-                        for i in range( len( entertaiment ) ):
-                            if entertaiment[i].activity == "Средняя физическая активность":
-                                if entertaiment[i].duration < flag2:
+                                    break
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_drink(guest_dict[val], drink[flag1])) + int(guest_dict[val]['Sentiment'])
+                            budget = budget + drink[flag1].price
+                            count.drinks[drink[flag1].name]+=1
+                            flag1 = 0
+                            flag2 = 0
+                            for i in range( len( dish ) ):
+                                if dish[i].consistency['Белки'] > flag2:
                                     flag1 = i
-                                    flag2 = entertaiment[i].duration
-                        count.entertaiments[entertaiment[flag1].name]+=1
+                                    flag2 = dish[i].consistency['Белки']
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_dish( guest_dict[val],
+                                                                                     dish[flag1] ))+int(guest_dict[val]['Sentiment'])
+                            budget = budget + dish[flag1].price
+                            count.dishes[dish[flag1].name]+=1
 
-                    # Работники со стажем
-                    if guest_dict[val]['Social_status'] == '4':
-                        flag1 = 0
-                        flag2 = 0
-                        for i in range( len( drink ) ):
-                            if drink[i].alcohol == "Есть":
-                                if drink[i].price > flag2:
+
+                        # Работники со стажем
+                        if guest_dict[val]['Social_status'] == '4':
+                            flag1 = 0
+                            flag2 = 0
+                            while True:
+                                i = np.random.randint(len(drink))
+                                if drink[i].alcohol == "Да":
                                     flag1 = i
                                     flag2 = drink[i].price
-                        budget = budget - drink[flag1].price
-                        count.drinks[drink[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 99999
-                        for i in range( len( dish ) ):
-                            if dish[i].consistency['Каллорийность'] < flag2:
-                                flag1 = i
-                                flag2 = dish[i].consistency['Каллорийность']
-                        budget = budget - dish[flag1].price
-                        count.dishes[dish[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 0
-                        for i in range( len( entertaiment ) ):
-                            if entertaiment[i].activity == "Низкая физическая активность":
-                                if entertaiment[i].duration > flag2:
-                                    flag1 = i
-                                    flag2 = entertaiment[i].duration
-                        count.entertaiments[entertaiment[flag1].name]+=1
+                                    break
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_drink(guest_dict[val], drink[flag1])) + int(guest_dict[val]['Sentiment'])
+                            budget = budget + drink[flag1].price
+                            count.drinks[drink[flag1].name] += 1
+                            flag1 = 0
+                            while True:
+                                i = np.random.randint( len( dish ) )
+                                if dish[i].consistency['Каллорийность'] < 360:
+                                    flag1=i
+                                    break
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_dish( guest_dict[val],
+                                                                                     dish[flag1] ))+int(guest_dict[val]['Sentiment'])
+                            budget = budget + dish[flag1].price
+                            count.dishes[dish[flag1].name]+=1
 
-                    # Пенсионеры
-                    if guest_dict[val]['Social_status'] == '5':
-                        flag1 = 0
-                        flag2 = 99999
-                        for i in range( len( drink ) ):
-                            if drink[i].alcohol == "Нет":
-                                if drink[i].price < flag2:
+                        # Пенсионеры
+                        if guest_dict[val]['Social_status'] == '5':
+                            flag1 = 0
+                            flag2 = 99999
+                            for i in range( len( drink ) ):
+                                if drink[i].alcohol == "Нет":
+                                    if drink[i].price < flag2:
+                                        flag1 = i
+                                        flag2 = drink[i].price
+
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_drink(guest_dict[val], drink[flag1])) + int(guest_dict[val]['Sentiment'])
+                            budget = budget + drink[flag1].price
+                            count.drinks[drink[flag1].name]+=1
+                            flag1 = 0
+                            flag2 = 99999
+                            for i in range( len( dish ) ):
+                                if dish[i].consistency['Жиры'] < flag2:
                                     flag1 = i
-                                    flag2 = drink[i].price
-                        budget = budget - drink[flag1].price
-                        count.drinks[drink[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 99999
-                        for i in range( len( dish ) ):
-                            if dish[i].consistency['Жиры'] < flag2:
-                                flag1 = i
-                                flag2 = dish[i].consistency['Жиры']
-                        budget = budget - dish[flag1].price
-                        count.dishes[dish[flag1].name]+=1
-                        flag1 = 0
-                        flag2 = 99999
-                        for i in range( len( entertaiment ) ):
-                            if entertaiment[i].activity == "Низкая физическая активность":
-                                if entertaiment[i].duration < flag2:
-                                    flag1 = i
-                                    flag2 = entertaiment[i].duration
-                        count.entertaiments[entertaiment[flag1].name]+=1
+                                    flag2 = dish[i].consistency['Жиры']
+
+                            guest_dict[val]['Sentiment'] = int(get_enjoing_dish( guest_dict[val],
+                                                                                     dish[flag1] ))+int(guest_dict[val]['Sentiment'])
+                            budget = budget + dish[flag1].price
+                            count.dishes[dish[flag1].name]+=1
+
+                    event_duration = event_duration - 30
+                    timer = timer - 30
+
 
             #Ветвь выбора праздника от неуспешных организаторов
             else:
-                budget = budget / choice_guest_number
-                for key, val in choice_guest_dict:
-                    flag1 = np.random.randint(len(drink))
-                    budget = budget - drink[flag1].price
-                    if int(budget) > 0:
+                timer = event_duration
+                while event_duration>0:
+
+                    for key, val in choice_guest_dict.items():
+                        if timer > 0:
+                            i = np.random.randint( len( entertaiment ) )
+                            if entertaiment[i].duration < event_duration:
+                                timer = entertaiment[i].duration
+                                guest_dict[val]['Sentiment'] = int( get_enjoing_entertaiment( guest_dict[val],
+                                                                                              entertaiment[i] ) ) + int(
+                                    guest_dict[val]['Sentiment'] )
+                                count.entertaiments[entertaiment[flag1].name] += 1
+
+                        flag1 = np.random.randint(len(drink))
+                        budget = budget + drink[flag1].price
                         count.drinks[drink[flag1].name]+=1
-                    flag1 = np.random.randint(len(dish))
-                    budget = budget - dish[flag1].price
-                    if int(budget) > 0:
+                        flag1 = np.random.randint(len(dish))
+                        budget = budget + dish[flag1].price
                         count.dishes[dish[flag1].name]+=1
-                    flag1 = np.random.randint(len(entertaiment))
-                    budget = budget - entertaiment[flag1].price
-                    if int(budget) > 0:
-                        count.entertaiments.update({entertaiment[flag1].name:count.entertaiments[entertaiment[flag1].name]+1})
+                    event_duration = event_duration - 30
+                    timer = timer - 30
             # вывод на результатов моделирования на экран
             print("Адрес места проведения")
             print(place[mark].address)
-            print("Остаток бюджета")
+            print("Потраченный бюджет")
             print(budget)
             print( "Количество гостей" )
             print( choice_guest_number )
@@ -281,6 +284,21 @@ def main_menu():
             print(count.drinks)
             print("Список развлечений")
             print(count.entertaiments)
+            for name, attributes in choice_guest_dict.items():
+                val = guest_dict[attributes]["Sentiment"]
+                charact = 'Вне себя от злости'
+                for k,v in sentiment_ratio.items():
+                    if int(val)>v:
+                        charact = k
+                        break
+                    if int(val)<=0:
+                        break
+                print(" {} : {}".format(attributes, charact))
+                guest_dict[attributes]["Sentiment"] = sentiment_ratio[charact]
+            f = open( 'guests.txt', 'w' )
+            for key, val in guest_dict.items():
+                f.write( '{}:{}\n'.format( key, val ) )
+            f.close()
         else:
             break
 

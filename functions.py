@@ -1,7 +1,7 @@
-from models import *
-import json
-import re
 import pickle
+import re
+
+from models import *
 
 org = {}
 guest_dict = {}
@@ -124,6 +124,8 @@ def set_organisator(): #Функция добавления пользовате
     case1 = Organisator( input_numbers( Organisator.amount,Organisator.amount_label.__str__() ), 0 )
     if case1.amount == 2: #Проверка того, один ли это человек или группа людей
         case1.numbers = input_number( case1.numbers_label.__str__() )
+    else:
+        case1.numbers=1
     for i in range( case1.numbers ): #Цикл с количеством повторений, равным количеству добавляемых людей
         key = input( "Введите имя" )
         value = {'Education': input_numbers( Person.education, Person.education_label.__str__() ),
@@ -133,14 +135,13 @@ def set_organisator(): #Функция добавления пользовате
                  'Sex': input_numbers( Person.sex, Person.sex_label.__str__() ),
                  'Speciality': input_numbers( Person.speciality, Person.speciality_label.__str__() ),
                  'Temper': input_numbers( Person.temper, Person.temper_label.__str__() ),
-                 'Budget': input_number( Person.budget_label.__str__() )} #Создание словаря в словаре "Организатор"
+                 } #Создание словаря в словаре "Организатор"
 
         org.update( {key: value} )
         # value.clear()
-    f = open( 'organisators.txt', 'ab' ) #Открываем файл на добавление в двоичном формате
-    pickle.dump(org,f) #Добавляем в файл результаты добавления
-    # for key, val in org.items():
-    #     f.write( '{}:{}\n'.format( key, val ) )
+    f = open( 'organisators.txt', 'a' ) #Открываем файл на добавление
+    for key, val in org.items():
+        f.write( '{}:{}\n'.format( key, val ) )
     f.close()
 
 
@@ -153,6 +154,8 @@ def get_names(dictionary): #Функция преобразования слов
     return names
 
 
+
+
 def set_guest(): #Добавление гостя. Все аналогично добавлению организатора
     case2 = Guest
     case2.amount = input_number( case2.amount_label.__str__() )
@@ -161,7 +164,8 @@ def set_guest(): #Добавление гостя. Все аналогично �
         value = {'Temper': input_numbers( Human.temper, Human.temper_label.__str__() ),
                  'Social_status': input_numbers( Human.social_status, Human.social_status_label.__str__() ),
                  'Age': input_number( Human.age_label.__str__() ),
-                 'Sex': input_numbers( Human.sex, Human.sex_label.__str__() )}
+                 'Sex': input_numbers( Human.sex, Human.sex_label.__str__() ),
+                 'Sentiment' : sentiment_ratio[sentiment[input_numbers(sentiment,"Настроение гостя")]]}
         guest_dict.update( {key: value} )
     f = open( 'guests.txt', 'a' )
     for key, val in guest_dict.items():
@@ -174,6 +178,7 @@ def set_event(): #Добавление мероприятия. Аналогич�
     case3 = Event
     case3.event_type = input_numbers( case3.event_type, case3.event_type_label.__str__() )
     case3.date = input_date( case3.date_label.__str__() )
+    case3.duration = input_number("Введите длительность мероприятия(в минутах)")
     key = case3.date
     value = case3.event_type
     event_dict.update( {key: value} )
@@ -182,7 +187,7 @@ def set_event(): #Добавление мероприятия. Аналогич�
     # for key, val in event_dict.items():
     #     f.write( '{}:{}\n'.format( key, val ) )
     f.close()
-    return event_dict
+    return case3.duration
 
 
 def set_dishes(): #добавление блюд. Пользовательский ввод не предусмотрен
@@ -247,9 +252,99 @@ def get_organisator_ratio(): #считаем "успешность" Органи
             if key == 'Portfolio':
                 level = level + int( org[item][key] )
             org_ratio[item] = level
-
-
     return org_ratio
+
+def get_enjoing_drink(guest,drink):
+        enjoy=0
+        if guest['Social_status'] == '1':
+            if drink.alcohol == 'Да':
+                enjoy=enjoy+1
+            if drink.price > 150:
+                enjoy=enjoy+1
+        if guest['Social_status'] == '2':
+            if drink.volume > 150:
+                enjoy = enjoy + 1
+        if guest['Social_status'] == '3':
+            if drink.alcohol == 'Да':
+                enjoy=enjoy+1
+            if drink.price > 100:
+                enjoy=enjoy+1
+        if guest['Social_status'] == '4':
+            if drink.alcohol == 'Да':
+                enjoy=enjoy+1
+        if guest['Social_status'] == '5':
+            if drink.alcohol == 'Да':
+                enjoy=enjoy+1
+            if drink.price < 150:
+                enjoy=enjoy+1
+        return enjoy
+
+def get_enjoing_dish(guest,dish):
+        enjoy=0
+        if guest['Social_status'] == '1':
+            if dish.weight > 10:
+                enjoy=enjoy+1
+            if dish.price > 100:
+                enjoy=enjoy+1
+        if guest['Social_status'] == '2':
+            if dish.weight > 150:
+                enjoy = enjoy + 1
+        if guest['Social_status'] == '3':
+            if dish.price > 250:
+                enjoy=enjoy+1
+        if guest['Social_status'] == '4':
+            if dish.consistency['Жиры']> 50:
+                enjoy=enjoy+1
+        if guest['Social_status'] == '5':
+            if dish.weight < 160:
+                enjoy=enjoy+1
+            if dish.consistency['Каллорийность'] < 350:
+                enjoy=enjoy+1
+        return enjoy
+
+def get_enjoing_entertaiment(guest,entertaiment):
+    enjoy = 0
+    if guest['Social_status'] == '1':
+       if entertaiment.activity == 'Маленькая физическая активность':
+           enjoy = enjoy +1
+       if entertaiment.activity == 'Средняя физическая активность':
+           enjoy = enjoy +2
+       if entertaiment.activity == 'Высокая физическая активность':
+           enjoy = enjoy +4
+
+    if guest['Social_status'] == '2':
+        if entertaiment.activity == 'Маленькая физическая активность':
+            enjoy = enjoy + 2
+        if entertaiment.activity == 'Средняя физическая активность':
+            enjoy = enjoy + 2
+        if entertaiment.activity == 'Высокая физическая активность':
+            enjoy = enjoy + 5
+
+    if guest['Social_status'] == '3':
+        if entertaiment.activity == 'Маленькая физическая активность':
+            enjoy = enjoy
+        if entertaiment.activity == 'Средняя физическая активность':
+            enjoy = enjoy + 2
+        if entertaiment.activity == 'Высокая физическая активность':
+            enjoy = enjoy
+
+    if guest['Social_status'] == '4':
+        if entertaiment.activity == 'Маленькая физическая активность':
+            enjoy = enjoy +1
+        if entertaiment.activity == 'Средняя физическая активность':
+            enjoy = enjoy +2
+        if entertaiment.activity == 'Высокая физическая активность':
+            enjoy = enjoy
+
+    if guest['Social_status'] == '5':
+        if entertaiment.activity == 'Маленькая физическая активность':
+            enjoy = enjoy + 4
+        if entertaiment.activity == 'Средняя физическая активность':
+            enjoy = enjoy + 1
+        if entertaiment.activity == 'Высокая физическая активность':
+            enjoy = enjoy - 1
+    return enjoy
+
 
 
 
